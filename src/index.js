@@ -1,4 +1,7 @@
-import { Teacher } from "./teacher";
-const teacher = new Teacher("Usmna", "MSC");
-teacher.walk();
-// console.log(teacher);
+import React from "react";
+import ReactDOM from "react-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "font-awesome/css/font-awesome.min.css";
+// import App from "./App";
+import Movies from "./components/movies";
+ReactDOM.render(<Movies />, document.getElementById("root"));
