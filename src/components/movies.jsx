@@ -40,18 +40,26 @@ class Movies extends Component {
     handleSort = sortColumn => {
         this.setState({ sortColumn });
     }
-    render() {
-        const { length: count } = this.state.movies;
+    //
+    getPageData = () => {
         const { currentPage, pageSize, selectedCategory, sortColumn, movies: allMovies } = this.state;
-        if (count === 0)
-            return <p>There is no movie Here</p>;
-
         const filtered = selectedCategory && selectedCategory._id
             ? allMovies.filter(m => m.category._id === selectedCategory._id)
             : allMovies;
 
         const sorted = _.orderBy(filtered, [sortColumn.path], [sortColumn.order]);
         const movies = pagenate(sorted, currentPage, pageSize);
+        return { totalCount: filtered.length, data: movies };
+    }
+    render() {
+        const { length: count } = this.state.movies;
+        const { currentPage, pageSize, sortColumn } = this.state;
+        if (count === 0)
+            return <p>There is no movie Here</p>;
+
+        const { totalCount, data: movies } = this.getPageData();
+
+
 
         return (
             <React.Fragment>
@@ -64,7 +72,7 @@ class Movies extends Component {
                                 onItemSelect={this.handleCategorySelect} />
                         </div>
                         <div className="col-md-9">
-                            <p>Total Number of Movies: {filtered.length}</p>
+                            <p>Total Number of Movies: {totalCount}</p>
                             <MoviesTabel
                                 movies={movies}
                                 sortColumn={sortColumn}
@@ -73,7 +81,7 @@ class Movies extends Component {
                                 onSort={this.handleSort}
                             />
                             <Pagenation
-                                itemCount={filtered.length}
+                                itemCount={totalCount}
                                 pageSize={pageSize}
                                 currentPage={currentPage}
                                 onPageChange={this.handlePageChange} />
